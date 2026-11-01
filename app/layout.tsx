@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-
+import { QueryProvider } from "@/providers/QueryProvider";
+import Header from "@/components/layout/Header";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -15,11 +16,15 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html
-      lang="en"
-      className={`${inter.className}  h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">{children}</body>
+    <html lang="en" className={`${inter.className}  h-full antialiased`}>
+      <body className="min-h-full flex flex-col">
+        <QueryProvider>
+          <Header/>
+          <main className="flex-1">
+            {children}
+          </main>
+        </QueryProvider>
+      </body>
     </html>
   );
 }
