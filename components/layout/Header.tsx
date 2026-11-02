@@ -1,24 +1,26 @@
-import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Button } from "../ui/button";
 import { db } from "@/db";
-import { users ,notifications} from "@/db/schema";
+import { users, notifications } from "@/db/schema";
+import NotificationBell from "@/features/notifications/components/NotificationBell";
 import { getCurrentUser } from "@/lib/auth";
-import { and, count, eq} from "drizzle-orm";
-import { Code2, Search } from "lucide-react";
+import { getInitials } from "@/lib/utils";
+import { and, count, eq } from "drizzle-orm";
+import { Code2, PenSquare, Search } from "lucide-react";
 import Link from "next/link";
 
-
-async function getUserData(userId:string){
-
-  const user=await db.select({
-    name:users.name,
-    username:users.username,
-    avatar:users.avatar
-  })
-  .from(users)
-  .where(eq(users.id,userId))
-  .limit(1)
- return user[0] || null
-};
+async function getUserData(userId: string) {
+  const user = await db
+    .select({
+      name: users.name,
+      username: users.username,
+      avatar: users.avatar,
+    })
+    .from(users)
+    .where(eq(users.id, userId))
+    .limit(1);
+  return user[0] || null;
+}
 
 async function getUnreadCount(userId: string): Promise<number> {
   const [result] = await db
@@ -31,11 +33,12 @@ async function getUnreadCount(userId: string): Promise<number> {
   return result?.count || 0;
 }
 
-const Header = async() => {
-
-  const currentUser=await getCurrentUser();
-  const userData=currentUser ? await getUserData(currentUser.userId) : null ;
-  const unreadCount=currentUser ? await getUnreadCount(currentUser.userId): 0;
+const Header = async () => {
+  const currentUser = await getCurrentUser();
+  const userData = currentUser ? await getUserData(currentUser.userId) : null;
+  const unreadCount = currentUser
+    ? await getUnreadCount(currentUser.userId)
+    : 0;
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -58,14 +61,46 @@ const Header = async() => {
         <nav className="flex items-center gap-2">
           {currentUser && userData ? (
             <>
-            <Link href={"/explore"} className="md:hidden">
-            <Button variant="ghost" size="icon">
-              <Search className="w5 h-5"/>
-            </Button>
-            </Link>
-            
+              <Link href={"/explore"} className="md:hidden">
+                <Button variant={"ghost"} size={"icon"}>
+                  <Search className="h-5 w-5" />
+                </Button>
+              </Link>
+              <NotificationBell initialUnreadCount={unreadCount} />
+              <Link href="/dashboard/new">
+                <Button variant="ghost" size="icon">
+                  <PenSquare className="h-5 w-5" />
+                </Button>
+              </Link>
+              <Link href={`/profile/${userData.username}`}>
+                <Avatar className="h-8 w-8">
+                  <AvatarImage src={userData.avatar || undefined} />
+                  <AvatarFallback>{getInitials(userData.name)}</AvatarFallback>
+                </Avatar>
+              </Link>
+              <Link href="/dashboard">
+                <Button variant="ghost" size="sm">
+                  Dashboard
+                </Button>
+              </Link>
             </>
-          ):()}
+          ) : (
+            <>
+              <Link href="/explore" className="md:hidden">
+                <Button variant="ghost" size="icon">
+                  <Search className="h-5 w-5" />
+                </Button>
+              </Link>
+              <Link href="/login">
+                <Button variant="ghost" size="sm">
+                  Log in
+                </Button>
+              </Link>
+              <Link href="/register">
+                <Button size="sm">Create account</Button>
+              </Link>
+            </>
+          )}
         </nav>
       </div>
     </header>
