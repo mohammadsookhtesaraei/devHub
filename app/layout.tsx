@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Geist } from "next/font/google";
 import "./globals.css";
 import { QueryProvider } from "@/providers/QueryProvider";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import { cn } from "@/lib/utils";
+
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 const inter = Inter({
   subsets: ["latin"],
@@ -17,7 +20,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${inter.className}  h-full antialiased`}>
+    <html lang="en" className={cn("h-full", "antialiased", inter.className, "font-sans", geist.variable)}>
       <body className="min-h-full flex flex-col">
         <QueryProvider>
           <Header/>

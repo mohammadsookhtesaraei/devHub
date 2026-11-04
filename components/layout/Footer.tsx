@@ -1,7 +1,16 @@
+import CurrentYear from "@/components/layout/CurrentYear";
 import { Code2 } from "lucide-react";
+
 import Link from "next/link";
 
+
+
+
 const Footer = () => {
+ 
+
+
+
   return (
     <footer className="border-t bg-muted/30">
       <div className="container mx-auto px-4 py-8">
@@ -17,11 +26,11 @@ const Footer = () => {
                 <span>DevHub</span>
             </Link>
             <p className="text-sm text-muted-foreground">
-              <p className="text-sm text-muted-foreground">
+             
                 A constructive community for developers to share, learn, and
                 grow together.
               </p>
-            </p>
+            
           </div>
 
           <div>
@@ -108,9 +117,11 @@ const Footer = () => {
         
         </div>
           <div className="mt-8 pt-8 border-t text-center text-sm text-muted-foreground">
-            <p>
-              © {new Date().getFullYear()} DevHub. Built with ❤️ for developers.
+       
+             <p>
+              © <CurrentYear/> DevHub. Built with ❤️ for developers.
             </p>
+      
           </div>
       </div>
     </footer>
